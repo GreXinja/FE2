@@ -1,0 +1,114 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Dashboard - IPL Management System</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet" />
+    <script>
+        document.addEventListener("DOMContentLoaded", async function () {
+            const token = localStorage.getItem("authToken");
+
+            if (!token) {
+                alert("Token missing. Please log in.");
+                return;
+            }
+
+            try {
+                const response = await fetch("http://127.0.0.1:8000/users/roles", {
+                    headers: { token }
+                });
+
+                const result = await response.json();
+
+                if (!response.ok) {
+                    alert("Error: " + result.error);
+                    return;
+                }
+
+                // Hide cards by default
+                document.getElementById("manageTeamCard").style.display = "none";
+                document.getElementById("adminCard").style.display = "none";
+
+                // Show if TeamOwner
+                if (result.TeamOwner) {
+                    document.getElementById("manageTeamCard").style.display = "block";
+                }
+
+                // Show if Admin
+                if (result.admin) {
+                    document.getElementById("adminCard").style.display = "block";
+                }
+
+            } catch (err) {
+                console.error("Error:", err);
+                alert("Server error");
+            }
+        });
+    </script>
+
+</head>
+
+<body class="bg-light">
+
+    <!-- Navbar -->
+    <nav class="navbar bg-body-tertiary shadow">
+        <div class="container-fluid">
+            <span class="navbar-brand mb-0 h1">IPL Management System</span>
+        </div>
+    </nav>
+
+    <div class="container mt-5">
+        <div class="row justify-content-center">
+
+            <!-- Player Card -->
+            <div class="col-md-3 m-3" id="playerCard">
+                <div class="card h-100 shadow-sm">
+                    <div class="card-body text-center">
+                        <h5 class="card-title">Player</h5>
+                        <h6 class="card-subtitle mb-2 text-muted">Player Details</h6>
+                        <p class="card-text">View and manage IPL players.</p>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Team Card -->
+            <div class="col-md-3 m-3" id="teamCard">
+                <div class="card h-100 shadow-sm">
+                    <div class="card-body text-center">
+                        <h5 class="card-title">Team</h5>
+                        <h6 class="card-subtitle mb-2 text-muted">Team Details</h6>
+                        <p class="card-text">Explore all IPL teams.</p>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Team Management Card -->
+            <div class="col-md-3 m-3" id="manageTeamCard">
+                <div class="card h-100 shadow-sm">
+                    <div class="card-body text-center">
+                        <h5 class="card-title">Team Management</h5>
+                        <h6 class="card-subtitle mb-2 text-muted">For Team Owners</h6>
+                        <p class="card-text">Manage your team roster and settings.</p>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Admin Card -->
+            <div class="col-md-3 m-3" id="adminCard">
+                <div class="card h-100 shadow-sm">
+                    <div class="card-body text-center">
+                        <h5 class="card-title">Admin</h5>
+                        <h6 class="card-subtitle mb-2 text-muted">Admin Stuff</h6>
+                        <p class="card-text">Admin access for control panel and system settings.</p>
+                    </div>
+                </div>
+            </div>
+
+        </div>
+    </div>
+
+</body>
+
+</html>
